@@ -3,7 +3,7 @@ name = "{{project-name}}"
 authors = [
     "{{authors}}"
 ]
-version = "0.1.0-rc1"{% if proc_macros %}  # Keep in sync{% endif %}
+version = "{{version}}"{% if proc_macros %}  # Keep in sync{% endif %}
 edition = "2018"
 
 license = "Zlib OR MIT OR Apache-2.0"
@@ -20,7 +20,7 @@ ui-tests = ["better-docs"]
 {% if proc_macros %}
 [dependencies.{{project-name}}-proc_macros]
 path = "src/proc_macros"
-version = "0.1.0-rc1"  # Keep in sync
+version = "{{version}}"  # Keep in sync
 {% endif %}
 [dev-dependencies]
 
