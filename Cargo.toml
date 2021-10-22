@@ -17,6 +17,8 @@ readme = "README.md"
 [features]
 better-docs = []  # allowed to break MSRV
 ui-tests = ["better-docs"]
+
+[dependencies]
 {% if proc_macros %}
 [dependencies.{{project-name}}-proc_macros]
 path = "src/proc_macros"
