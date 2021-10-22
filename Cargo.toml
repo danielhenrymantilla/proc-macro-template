@@ -1,15 +1,33 @@
 [package]
-name = "{{crate_name}}"
-version = "0.1.0"
-authors = ["{{authors}}"]
+name = "{{project-name}}"
+authors = [
+    "{{authors}}"
+]
+version = "0.1.0-rc1"{% if proc_macros %}  # Keep in sync{% endif %}
 edition = "2018"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+license = "Zlib OR MIT OR Apache-2.0"
+repository = "https://github.com/danielhenrymantilla/{{project-name}}.rs"
+documentation = "https://docs.rs/{{project-name}}"
+readme = "README.md"
 
-[dependencies]
-proc-macro-hack = "0.5.11"  # For procedural macros in expression position.
+# description = "…"
+# keywords = []
 
-[dependencies.proc-macro]
-package = "{{crate_name}}_proc-macro"
-version = "0.1.0"  # Same as package.version
-path = "src/proc-macro"
+[features]
+better-docs = []  # allowed to break MSRV
+ui-tests = ["better-docs"]
+{% if proc_macros %}
+[dependencies.{{project-name}}-proc_macros]
+path = "src/proc_macros"
+version = "0.1.0-rc1"  # Keep in sync
+{% endif %}
+[dev-dependencies]
+
+[workspace]
+{% if proc_macros %}members = [
+    "src/proc_macros",
+]
+{% endif %}
+[package.metadata.docs.rs]
+all-features = true
