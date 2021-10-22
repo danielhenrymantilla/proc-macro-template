@@ -5,7 +5,7 @@ path = "mod.rs"
 [package]
 name = "{{project-name}}-proc_macros"
 authors = [
-    "Daniel Henry-Mantilla <daniel.henry.mantilla@gmail.com>"
+    "{{authors}}"
 ]
 version = "{{version}}"  # Keep in sync
 edition = "2018"
