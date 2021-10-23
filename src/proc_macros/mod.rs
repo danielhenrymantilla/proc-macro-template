@@ -25,6 +25,7 @@ use ::syn::{*,
     parse::{Parse, Parser, ParseStream},
     punctuated::Punctuated,
     Result, // Explicitly shadow it
+    spanned::Spanned,
 };
 
 ///
