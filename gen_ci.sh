@@ -109,6 +109,7 @@ EOF
 
 sed -e 's@\(\${\)@\1{@g' -e 's@\(}\)@\1}@g' > \
 .github/workflows/future-proof.yml <<'EOF'
+# Templated by `cargo-generate` using https://github.com/danielhenrymantilla/proc-macro-template
 name: Cron CI
 
 on:

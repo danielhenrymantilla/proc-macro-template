@@ -5,3 +5,5 @@ use ::{{crate_name}}::*;
 
 /* todo */
 ```
+
+<!-- Templated by `cargo-generate` using https://github.com/danielhenrymantilla/proc-macro-template -->

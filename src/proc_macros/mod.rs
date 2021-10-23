@@ -1,5 +1,6 @@
 //! Crate not intended for direct use.
 //! Use https:://docs.rs/{{project-name}} instead.
+// Templated by `cargo-generate` using https://github.com/danielhenrymantilla/proc-macro-template
 #![allow(nonstandard_style, unused_imports)]
 
 use ::core::{

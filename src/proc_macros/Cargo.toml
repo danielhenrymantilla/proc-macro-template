@@ -1,3 +1,4 @@
+# Templated by `cargo-generate` using https://github.com/danielhenrymantilla/proc-macro-template
 [lib]
 proc-macro = true
 path = "mod.rs"
@@ -11,7 +12,7 @@ version = "{{version}}"  # Keep in sync
 edition = "2018"
 
 license = "Zlib OR MIT OR Apache-2.0"
-repository = "https://github.com/danielhenrymantilla/{{project-name}}.rs"
+repository = "https://github.com/{{github_user}}/{{project-name}}.rs"
 documentation = "https://docs.rs/{{project-name}}"
 
 description = "Internal: proc-macro backend of ::{{crate_name}}."

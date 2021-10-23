@@ -1,3 +1,4 @@
+# Templated by `cargo-generate` using https://github.com/danielhenrymantilla/proc-macro-template
 [package]
 name = "{{project-name}}"
 authors = [
@@ -7,7 +8,7 @@ version = "{{version}}"{% if proc_macros %}  # Keep in sync{% endif %}
 edition = "2018"
 
 license = "Zlib OR MIT OR Apache-2.0"
-repository = "https://github.com/danielhenrymantilla/{{project-name}}.rs"
+repository = "https://github.com/{{github_user}}/{{project-name}}.rs"
 documentation = "https://docs.rs/{{project-name}}"
 readme = "README.md"
 

@@ -15,6 +15,10 @@ type = "bool"
 prompt = "Will you be defining procedural macros?"
 default = true
 
+[placeholders.github_user]
+type = "string"
+prompt = "Github username?"
+
 [template]
 ignore = [
     '.git',
