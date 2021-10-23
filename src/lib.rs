@@ -24,6 +24,7 @@ pub use ::{{crate_name}}_proc_macros::some_macro_name;
 // macro internals
 #[doc(hidden)] /** Not part of the public API */ pub
 mod __ {
+    pub use ::core; // or `std`
 }
 
 #[cfg_attr(feature = "ui-tests",
