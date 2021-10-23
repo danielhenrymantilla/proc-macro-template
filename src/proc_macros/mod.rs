@@ -3,6 +3,7 @@
 #![allow(nonstandard_style, unused_imports)]
 
 use ::core::{
+    mem,
     ops::Not as _,
 };
 use ::proc_macro::{
