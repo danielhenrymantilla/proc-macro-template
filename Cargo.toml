@@ -2,9 +2,9 @@
 [package]
 name = "{{project-name}}"
 authors = [
-    "{{authors}}"
+    "{{authors}}",
 ]
-version = "{{version}}"{% if proc_macros %}  # Keep in sync{% endif %}
+version = "{{version}}"  # Keep in sync
 edition = "2018"
 
 license = "Zlib OR MIT OR Apache-2.0"
@@ -34,3 +34,6 @@ version = "{{version}}"  # Keep in sync
 {% endif %}
 [package.metadata.docs.rs]
 all-features = true
+rustdoc-args = [
+    "--html-before-content", "fix-docsrs-li-details-summary.html",
+]
