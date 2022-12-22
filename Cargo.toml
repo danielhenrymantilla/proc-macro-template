@@ -1,4 +1,7 @@
 # Templated by `cargo-generate` using https://github.com/danielhenrymantilla/proc-macro-template
+[lib]
+path = "src/_lib.rs"
+
 [package]
 name = "{{project-name}}"
 authors = [

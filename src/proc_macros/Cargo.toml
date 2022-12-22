@@ -1,7 +1,7 @@
 # Templated by `cargo-generate` using https://github.com/danielhenrymantilla/proc-macro-template
 [lib]
 proc-macro = true
-path = "mod.rs"
+path = "_mod.rs"
 
 [package]
 name = "{{project-name}}-proc_macros"
