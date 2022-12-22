@@ -31,11 +31,11 @@ use ::syn::{*,
 ///
 #[proc_macro_attribute] pub
 fn an_attr (
-    attrs: TokenStream,
+    args: TokenStream,
     input: TokenStream,
 ) -> TokenStream
 {
-    an_attr_impl(attrs.into(), input.into())
+    an_attr_impl(args.into(), input.into())
     //  .map(|ret| { println!("{}", ret); ret })
         .unwrap_or_else(|err| {
             let mut errors =
@@ -53,11 +53,11 @@ fn an_attr (
 }
 
 fn an_attr_impl (
-    attrs: TokenStream2,
+    args: TokenStream2,
     input: TokenStream2,
 ) -> Result<TokenStream2>
 {
     // By default deny any attribute present.
-    let _: parse::Nothing = parse2(attrs)?;
+    let _: parse::Nothing = parse2(args)?;
     todo!()
 }

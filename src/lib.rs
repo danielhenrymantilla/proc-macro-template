@@ -1,8 +1,12 @@
-#![cfg_attr(feature = "better-docs",
-    cfg_attr(all(), doc = include_str!("../README.md")),
-)]
+#![doc = include_str!("../README.md")]
 #![no_std]
 #![forbid(unsafe_code)]
+
+use {
+    ::core::{
+        ops::Not as _,
+    },
+};
 
 #[cfg(COMMENTED_OUT)] // <- Remove this when used!
 /// The crate's prelude.
@@ -23,11 +27,9 @@ pub use ::{{crate_name}}_proc_macros::some_macro_name;
 {% endif %}
 // macro internals
 #[doc(hidden)] /** Not part of the public API */ pub
-mod __ {
+mod ඞ {
     pub use ::core; // or `std`
 }
 
-#[cfg_attr(feature = "ui-tests",
-    cfg_attr(all(), doc = include_str!("compile_fail_tests.md")),
-)]
+#[doc = include_str!("compile_fail_tests.md")]
 mod _compile_fail_tests {}

@@ -1,7 +1,7 @@
 [placeholders.MSRV]
 type = "string"
 prompt = "Minimum Supported Rust Version?"
-default = "1.42.0"
+default = "1.56.0"
 regex = '^\s*1\.\d\d\.0\s*$'
 
 [placeholders.version]

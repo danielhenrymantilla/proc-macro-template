@@ -5,7 +5,7 @@ authors = [
     "{{authors}}",
 ]
 version = "{{version}}"  # Keep in sync
-edition = "2018"
+edition = "2021"
 
 license = "Zlib OR MIT OR Apache-2.0"
 repository = "https://github.com/{{github_user}}/{{project-name}}.rs"
@@ -35,5 +35,12 @@ version = "{{version}}"  # Keep in sync
 [package.metadata.docs.rs]
 all-features = true
 rustdoc-args = [
+    # Use (with or without `open`):
+    # ```md
+    # <details open class="custom"><summary><span class="summary-box"><span>Click to hide</span></span></summary>
+    # …
+    # </details>
+    # ```
+    # to get nice drop-down menus (and avoid the css bug with rustdoc).
     "--html-before-content", "fix-docsrs-li-details-summary.html",
 ]

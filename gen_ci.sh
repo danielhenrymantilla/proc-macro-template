@@ -24,8 +24,11 @@ jobs:
         rust-toolchains:
           - {{MSRV}}
           - stable
+          # Try to guard against a near-future regression.
           - beta
-        cargo-locked: ["--locked", ""]
+        cargo-locked:
+          - '--locked'
+          - ''
     steps:
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
@@ -81,6 +84,8 @@ jobs:
       - name: Cargo test (embedded doc tests)
         if: matrix.rust-toolchains == 'stable'
         uses: actions-rs/cargo@v1
+        env:
+          RUSTC_BOOTSTRAP: 1
         with:
           command: test
           args: --features better-docs --doc
@@ -91,20 +96,22 @@ jobs:
     runs-on: ubuntu-latest
     needs: [check]
     steps:
-        - name: Install Rust toolchain
-          uses: actions-rs/toolchain@v1
-          with:
-            profile: default
-            override: true
-            toolchain: stable
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: default
+          override: true
+          toolchain: stable
 
-        - name: Clone repo
-          uses: actions/checkout@v2
+      - name: Clone repo
+        uses: actions/checkout@v2
 
-        - name: Cargo UI test
-          uses: actions-rs/cargo@v1
-          with:
-            command: test-ui
+      - name: Cargo UI test
+        uses: actions-rs/cargo@v1
+        env:
+          RUSTC_BOOTSTRAP: 1
+        with:
+          command: test-ui
 EOF
 
 sed -e 's@\(\${\)@\1{@g' -e 's@\(}\)@\1}@g' > \
@@ -132,11 +139,16 @@ jobs:
           - macos-latest
           - windows-latest
         rust-toolchains:
-          - {{MSRV}}
+          # Future-proof against compiler-regressions
           - stable
           - beta
           - nightly
-        cargo-locked: ["--locked", ""]
+        cargo-locked:
+          - '--locked'
+        include:
+          # Also future-proof against semver breakage from dependencies.
+          - rust-toolchains: stable
+            cargo-locked: ''
     steps:
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
@@ -154,6 +166,8 @@ jobs:
 
       - name: Cargo test
         uses: actions-rs/cargo@v1
+        env:
+          RUSTC_BOOTSTRAP: 1
         with:
           command: test
           args: ${ matrix.cargo-locked }
@@ -161,6 +175,8 @@ jobs:
       - name: Cargo test (embed `README.md` + UI)
         if: matrix.rust-toolchains != '{{MSRV}}'
         uses: actions-rs/cargo@v1
+        env:
+          RUSTC_BOOTSTRAP: 1
         with:
           command: test-ui
 EOF
