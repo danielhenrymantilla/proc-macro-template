@@ -30,7 +30,7 @@ use ::syn::{*,
 
 ///
 #[proc_macro_attribute] pub
-fn an_attr (
+fn an_attr(
     args: TokenStream,
     input: TokenStream,
 ) -> TokenStream
@@ -52,7 +52,7 @@ fn an_attr (
         .into()
 }
 
-fn an_attr_impl (
+fn an_attr_impl(
     args: TokenStream2,
     input: TokenStream2,
 ) -> Result<TokenStream2>
