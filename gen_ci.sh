@@ -29,6 +29,10 @@ jobs:
         cargo-locked:
           - '--locked'
           - ''
+        exclude:
+          # MSRV guarantee only stands for `.lock`-tested dependencies.
+          - rust-toolchains: {{MSRV}}
+            cargo-locked: ''
     steps:
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
@@ -145,10 +149,8 @@ jobs:
           - nightly
         cargo-locked:
           - '--locked'
-        include:
           # Also future-proof against semver breakage from dependencies.
-          - rust-toolchains: stable
-            cargo-locked: ''
+          - ''
     steps:
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
