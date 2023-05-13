@@ -1,13 +1,13 @@
 [placeholders.MSRV]
 type = "string"
 prompt = "Minimum Supported Rust Version?"
-default = "1.56.0"
+default = "1.65.0"
 regex = '^\s*1\.\d\d\.0\s*$'
 
 [placeholders.version]
 type = "string"
 prompt = "Initial package version?"
-default = "0.1.0"
+default = "0.1.0-rc1"
 regex = '^\s*[0-9]+\.[0-9]+\.[0-9]+(?:-.*)?\s*$'
 
 [placeholders.proc_macros]

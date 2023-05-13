@@ -19,14 +19,22 @@ readme = "README.md"
 # keywords = []
 
 [features]
-better-docs = []  # allowed to break MSRV
+better-docs = [  # allowed to break MSRV
+]
 ui-tests = ["better-docs"]
+
+default = [
+]
+
+"docs.rs" = [
+    "better-docs",
+]
 
 [dependencies]
 {% if proc_macros %}
 [dependencies.{{project-name}}-proc_macros]
 path = "src/proc_macros"
-version = "{{version}}"  # Keep in sync
+version = "={{version}}"  # Keep in sync
 {% endif %}
 [dev-dependencies]
 
@@ -36,7 +44,7 @@ version = "{{version}}"  # Keep in sync
 ]
 {% endif %}
 [package.metadata.docs.rs]
-all-features = true
+features = ["docs.rs"]
 rustdoc-args = [
     # Use (with or without `open`):
     # ```md
