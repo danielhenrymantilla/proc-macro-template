@@ -9,7 +9,7 @@ sed -e 's@\(\${\)@\1{@g' -e 's@\(}\)@\1}@g' > \
 name: CI
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${ github.workflow }-${ github.ref }
   cancel-in-progress: true
 
 on:
@@ -122,20 +122,21 @@ jobs:
           command: test-ui
 
   required-jobs:
-      needs:
-        - check
-        - build-and-test
-      runs-on: ubuntu-latest
-      if: ${ always() }
-      steps:
-        - name: 'All required jobs'
-          run: |
-            RESULT=$(echo "${ join(needs.*.result, '') }" | sed -e "s/success//g")
-            if [ -n "$RESULT" ]; then
-              echo "❌"
-              false
-            fi
-            echo "✅"
+    name: 'All the required jobs'
+    needs:
+      - check
+      - build-and-test
+    runs-on: ubuntu-latest
+    if: ${ always() }
+    steps:
+      - name: 'Check success of the required jobs'
+        run: |
+          RESULT=$(echo "${ join(needs.*.result, '') }" | sed -e "s/success//g")
+          if [ -n "$RESULT" ]; then
+            echo "❌"
+            false
+          fi
+          echo "✅"
 EOF
 
 sed -e 's@\(\${\)@\1{@g' -e 's@\(}\)@\1}@g' > \
