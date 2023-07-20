@@ -18,6 +18,7 @@ default = true
 [placeholders.github_user]
 type = "string"
 prompt = "Github username?"
+default = "danielhenrymantilla"
 
 [template]
 ignore = [

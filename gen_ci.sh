@@ -8,6 +8,10 @@ sed -e 's@\(\${\)@\1{@g' -e 's@\(}\)@\1}@g' > \
 .github/workflows/CI.yml <<'EOF'
 name: CI
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches:
@@ -21,24 +25,23 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        rust-toolchains:
+        rust-toolchain:
           - {{MSRV}}
           - stable
           # Try to guard against a near-future regression.
           - beta
-        cargo-locked:
-          - '--locked'
-          - ''
+        cargo-locked: ['', '--locked']
+        # feature-xxx: ['', '--features xxx']
         exclude:
           # MSRV guarantee only stands for `.lock`-tested dependencies.
-          - rust-toolchains: {{MSRV}}
+          - rust-toolchain: {{MSRV}}
             cargo-locked: ''
     steps:
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: ${ matrix.rust-toolchains }
+          toolchain: ${ matrix.rust-toolchain }
           override: true
 
       - name: Clone repo
@@ -58,7 +61,7 @@ jobs:
   build-and-test:
     name: Build and test
     runs-on: ${ matrix.os }
-    needs: [check]
+    needs: []
     strategy:
       fail-fast: false
       matrix:
@@ -66,7 +69,7 @@ jobs:
           - ubuntu-latest
           - macos-latest
           - windows-latest
-        rust-toolchains:
+        rust-toolchain:
           - {{MSRV}}
           - stable
     steps:
@@ -75,18 +78,19 @@ jobs:
         with:
           profile: default
           override: true
-          toolchain: ${ matrix.rust-toolchains }
+          toolchain: ${ matrix.rust-toolchain }
 
       - name: Clone repo
         uses: actions/checkout@v2
 
-      - name: Cargo test
+      - name: cargo test --lib --tests
         uses: actions-rs/cargo@v1
         with:
           command: test
+          args: --lib --tests
 
-      - name: Cargo test (embedded doc tests)
-        if: matrix.rust-toolchains == 'stable'
+      - name: cargo test --doc
+        if: matrix.rust-toolchain == 'stable'
         uses: actions-rs/cargo@v1
         env:
           RUSTC_BOOTSTRAP: 1
@@ -116,6 +120,22 @@ jobs:
           RUSTC_BOOTSTRAP: 1
         with:
           command: test-ui
+
+  required-jobs:
+      needs:
+        - check
+        - build-and-test
+      runs-on: ubuntu-latest
+      if: ${ always() }
+      steps:
+        - name: 'All required jobs'
+          run: |
+            RESULT=$(echo "${ join(needs.*.result, '') }" | sed -e "s/success//g")
+            if [ -n "$RESULT" ]; then
+              echo "❌"
+              false
+            fi
+            echo "✅"
 EOF
 
 sed -e 's@\(\${\)@\1{@g' -e 's@\(}\)@\1}@g' > \
@@ -142,22 +162,22 @@ jobs:
           - ubuntu-latest
           - macos-latest
           - windows-latest
-        rust-toolchains:
+        rust-toolchain:
           # Future-proof against compiler-regressions
-          - stable
           - beta
           - nightly
-        cargo-locked:
-          - '--locked'
+        cargo-locked: ['--locked']
+        include:
           # Also future-proof against semver breakage from dependencies.
-          - ''
+          - rust-toolchain: stable
+            cargo-locked: ''
     steps:
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
         with:
           profile: default
           override: true
-          toolchain: ${ matrix.rust-toolchains }
+          toolchain: ${ matrix.rust-toolchain }
 
       - name: Clone repo
         uses: actions/checkout@v2
@@ -175,7 +195,7 @@ jobs:
           args: ${ matrix.cargo-locked }
 
       - name: Cargo test (embed `README.md` + UI)
-        if: matrix.rust-toolchains != '{{MSRV}}'
+        if: matrix.rust-toolchain != '{{MSRV}}'
         uses: actions-rs/cargo@v1
         env:
           RUSTC_BOOTSTRAP: 1

@@ -3,7 +3,7 @@
 ```rust ,compile_fail
 use ::{{crate_name}}::*;
 
-/* todo */
+compile_fail!("TODO");
 ```
 
 <!-- Templated by `cargo-generate` using https://github.com/danielhenrymantilla/proc-macro-template -->

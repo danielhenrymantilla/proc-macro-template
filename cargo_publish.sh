@@ -1,14 +1,18 @@
 #!/bin/sh
 
 set -euxo pipefail
+
+cargo update -vw
+[[ -z "$(git status --porcelain)" ]]
+
 {% if proc_macros %}
 (cd src/proc_macros
-    cargo +stable publish
+    cargo publish
 )
 {% endif %}
 for i in $(seq 10)
 do
-    cargo +stable publish && exit 0
+    cargo publish && exit 0
     sleep 5
 done
-cargo +stable publish
+cargo publish

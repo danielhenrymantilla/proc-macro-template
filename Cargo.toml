@@ -9,6 +9,7 @@ authors = [
 ]
 version = "{{version}}"  # Keep in sync
 edition = "2021"
+rust-version = "{{MSRV}}"
 
 license = "Zlib OR MIT OR Apache-2.0"
 repository = "https://github.com/{{github_user}}/{{project-name}}.rs"
@@ -19,14 +20,20 @@ readme = "README.md"
 # keywords = []
 
 [features]
-better-docs = [  # allowed to break MSRV
-]
-ui-tests = ["better-docs"]
-
 default = [
 ]
 
-"docs.rs" = [
+# unstable! Will probably use nightly to improve doc quality
+better-docs = []
+
+ui-tests = [
+    "better-docs",
+]
+
+# `docs-rs` is very similar to `better-docs`, but for it being allowed to enable
+# other features as well, often to make sure optional/non-`default` features
+# make it to the rendered docs (using `--all-features` instead is not that great).
+docs-rs = [
     "better-docs",
 ]
 
@@ -44,7 +51,9 @@ version = "={{version}}"  # Keep in sync
 ]
 {% endif %}
 [package.metadata.docs.rs]
-features = ["docs.rs"]
+features = [
+    "docs-rs",
+]
 rustdoc-args = [
     # Use (with or without `open`):
     # ```md
