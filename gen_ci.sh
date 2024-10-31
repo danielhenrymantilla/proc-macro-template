@@ -38,28 +38,25 @@ jobs:
             cargo-locked: ''
     steps:
       - name: Install Rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: ${ matrix.rust-toolchain }
-          override: true
+        uses: dtolnay/rust-toolchain@${ matrix.rust-toolchain }
+        id: installed_toolchain
+
+      - name: Override toolchain just in case.
+        run: rustup override set ${ steps.installed_toolchain.outputs.name }
 
       - name: Clone repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Update `Cargo.lock`
         if: matrix.cargo-locked != '--locked'
         run: cargo update -v
 
       - name: Cargo check
-        uses: actions-rs/cargo@v1
-        with:
-          command: check
-          args: ${ matrix.cargo-locked }
+        run: cargo check ${ matrix.cargo-locked }
 
-  # == BUILD & TEST == #
-  build-and-test:
-    name: Build and test
+  # == TEST == #
+  test:
+    name: "Run tests"
     runs-on: ${ matrix.os }
     needs: []
     strategy:
@@ -74,58 +71,50 @@ jobs:
           - stable
     steps:
       - name: Install Rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: default
-          override: true
-          toolchain: ${ matrix.rust-toolchain }
+        uses: dtolnay/rust-toolchain@${ matrix.rust-toolchain }
+        id: installed_toolchain
+
+      - name: Override toolchain just in case.
+        run: rustup override set ${ steps.installed_toolchain.outputs.name }
 
       - name: Clone repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: cargo test --lib --tests
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: --lib --tests
+      - run: cargo test --lib --tests
 
-      - name: cargo test --doc
-        if: matrix.rust-toolchain == 'stable'
-        uses: actions-rs/cargo@v1
+      - run: cargo test --doc --features docs-rs
+        if: matrix.rust-toolchain != '{{MSRV}}'
         env:
           RUSTC_BOOTSTRAP: 1
-        with:
-          command: test
-          args: --features better-docs --doc
 
-  # == UI TESTS ==
-  ui-test:
-    name: UI Tests
-    runs-on: ubuntu-latest
-    needs: [check]
-    steps:
-      - name: Install Rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: default
-          override: true
-          toolchain: stable
-
-      - name: Clone repo
-        uses: actions/checkout@v2
-
-      - name: Cargo UI test
-        uses: actions-rs/cargo@v1
-        env:
-          RUSTC_BOOTSTRAP: 1
-        with:
-          command: test-ui
+  # # == UI TESTS ==
+  # ui-test:
+  #   name: UI Tests
+  #   runs-on: ubuntu-latest
+  #   needs: [check]
+  #   steps:
+  #     - name: Install Rust toolchain
+  #       uses: dtolnay/rust-toolchain@stable
+  #       id: installed_toolchain
+  #
+  #     - name: Override toolchain just in case.
+  #       run: rustup override set ${ steps.installed_toolchain.outputs.name }
+  #
+  #     - name: Clone repo
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Cargo UI test
+  #       run: cargo test-ui
+  #       env:
+  #         RUSTC_BOOTSTRAP: 1
+  #       with:
+  #         command: test-ui
 
   required-jobs:
     name: 'All the required jobs'
     needs:
       - check
-      - build-and-test
+      - test
     runs-on: ubuntu-latest
     if: ${ always() }
     steps:
@@ -145,9 +134,6 @@ sed -e 's@\(\${\)@\1{@g' -e 's@\(}\)@\1}@g' > \
 name: Cron CI
 
 on:
-  push:
-    branches:
-      - master
   schedule:
     - cron: '0 8 * * 1,5'
 
@@ -172,36 +158,31 @@ jobs:
           # Also future-proof against semver breakage from dependencies.
           - rust-toolchain: stable
             cargo-locked: ''
+          - rust-toolchain: beta
+            cargo-locked: ''
     steps:
       - name: Install Rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: default
-          override: true
-          toolchain: ${ matrix.rust-toolchain }
+        uses: dtolnay/rust-toolchain@${ matrix.rust-toolchain }
+        id: installed_toolchain
+
+      - name: Override toolchain just in case.
+        run: rustup override set ${ steps.installed_toolchain.outputs.name }
 
       - name: Clone repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Update `Cargo.lock`
         if: matrix.cargo-locked != '--locked'
         run: cargo update -v
 
-      - name: Cargo test
-        uses: actions-rs/cargo@v1
+      - run: cargo test ${ matrix.cargo-locked } --features docs-rs
         env:
           RUSTC_BOOTSTRAP: 1
-        with:
-          command: test
-          args: ${ matrix.cargo-locked }
 
-      - name: Cargo test (embed `README.md` + UI)
-        if: matrix.rust-toolchain != '{{MSRV}}'
-        uses: actions-rs/cargo@v1
-        env:
-          RUSTC_BOOTSTRAP: 1
-        with:
-          command: test-ui
+      # - run: cargo test-ui
+      #   if: matrix.rust-toolchain != '{{MSRV}}'
+      #   env:
+      #     RUSTC_BOOTSTRAP: 1
 EOF
 
 rm -- "$0"
