@@ -38,7 +38,9 @@ jobs:
             cargo-locked: ''
     steps:
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@${ matrix.rust-toolchain }
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${ matrix.rust-toolchain }
         id: installed_toolchain
 
       - name: Override toolchain just in case.
@@ -71,7 +73,9 @@ jobs:
           - stable
     steps:
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@${ matrix.rust-toolchain }
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${ matrix.rust-toolchain }
         id: installed_toolchain
 
       - name: Override toolchain just in case.
@@ -165,7 +169,9 @@ jobs:
             cargo-locked: '--locked'
     steps:
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@${ matrix.rust-toolchain }
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${ matrix.rust-toolchain }
         id: installed_toolchain
 
       - name: Override toolchain just in case.
