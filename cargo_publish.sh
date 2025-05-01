@@ -7,7 +7,7 @@ cargo update -vw
 
 {% if proc_macros %}
 (cd src/proc_macros
-    cargo +stable publish
+    cargo publish
 )
 {% endif %}
-cargo +stable publish
+cargo publish
